@@ -54,7 +54,7 @@ class Github
         user = payload[:sender][:login]
         org  = payload[:repository][:owner][:name]
 
-        ignore_branches = bot.bot_config["github_ignore_branches"][repo] || []
+        ignore_branches = bot.bot_config["github_ignore_branches"][payload[:repository][:full_name]] || []
 
         unless ignore_branches.include? branch
 
