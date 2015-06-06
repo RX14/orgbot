@@ -33,7 +33,7 @@ class Github
           title = payload[:pull_request][:title]
           url   = Gitio::shorten payload[:pull_request][:html_url]
           user  = payload[:sender][:login]
-          bot.bot_config['github_repos'][payload[:repository][:owner][:login]].map do |it|
+          bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map do |it|
             bot.channel_list.find(it)
           end.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} #{action} pull request #{Cinch::Formatting.format(:green, "\##{issue}")}: \"#{title}\" - #{url}" }
         end
@@ -42,7 +42,7 @@ class Github
         issue = payload[:pull_request][:number]
         user  = payload[:comment][:user][:login]
         repo  = payload[:repository][:name]
-        bot.bot_config['github_repos'][payload[:repository][:owner][:login]].map { |it|
+        bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map { |it|
           bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} reviewed pull request #{Cinch::Formatting.format(:green, "\##{issue}")} - #{url}" }
       when 'push'
         name = payload[:ref]
@@ -53,7 +53,7 @@ class Github
         user = payload[:sender][:login]
         var = payload[:repository][:owner][:login]
         puts var.inspect
-        bot.bot_config['github_repos'][var].map { |it|
+        bot.bot_config['github_orgs'][var].map { |it|
           puts it
           bot.channel_list.find(it) }.each do |chan|
           chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} pushed #{Cinch::Formatting.format(:green, num.to_s)} commits to #{Cinch::Formatting.format(:green, name)}: #{url}"
@@ -73,7 +73,7 @@ class Github
           title = payload[:issue][:title]
           url   = Gitio::shorten payload[:issue][:html_url]
           user  = payload[:sender][:login]
-         bot.bot_config['github_repos'][payload[:repository][:owner][:login]].map { |it|
+         bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map { |it|
             bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} #{action} issue #{Cinch::Formatting.format(:green, "\##{issue}")}: \"#{title}\" - #{url}" }
         end
 
@@ -83,7 +83,7 @@ class Github
         user  = payload[:comment][:user][:login]
         title = payload[:issue][:title]
         repo  = payload[:repository][:name]
-        bot.bot_config['github_repos'][payload[:repository][:owner][:login]].map { |it|
+        bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map { |it|
           bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} commented on issue #{Cinch::Formatting.format(:green, "\##{issue}")}: \"#{title}\" - #{url}" }
 
       when 'create'
@@ -92,7 +92,7 @@ class Github
         repo = payload[:repository][:name]
         url  = Gitio::shorten payload[:repository][:html_url]
         user = payload[:sender][:login]
-        bot.bot_config['github_repos'][payload[:repository][:owner][:login]].map { |it|
+        bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map { |it|
           bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} created #{type} #{name}: #{url}" }
 
       when 'delete'
@@ -101,14 +101,14 @@ class Github
         repo = payload[:repository][:name]
         url  = Gitio::shorten payload[:repository][:html_url]
         user = payload[:sender][:login]
-        bot.bot_config['github_repos'][payload[:repository][:owner][:login]].map { |it|
+        bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map { |it|
           bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} deleted #{type} #{name}: #{url}" }
 
       when 'fork'
         repo = payload[:repository][:name]
         url  = Gitio::shorten payload[:forkee][:html_url]
         user = payload[:forkee][:owner][:login]
-        bot.bot_config['github_repos'][payload[:repository][:owner][:login]].map { |it|
+        bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map { |it|
           bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} forked the repo: #{url}" }
 
       when 'commit_comment'
@@ -116,7 +116,7 @@ class Github
         commit = payload[:comment][:commit_id]
         user   = payload[:comment][:user][:login]
         repo   = payload[:repository][:name]
-        bot.bot_config['github_repos'][payload[:repository][:owner][:login]].map { |it|
+        bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map { |it|
           bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} commented on commit #{Cinch::Formatting.format(:green, commit)}: #{url}" }
 
       when 'status'
@@ -125,7 +125,7 @@ class Github
           repo = payload[:repository][:name]
           url  = payload[:target_url]
           desc = payload[:description]
-          bot.bot_config['github_repos'][payload[:repository][:owner][:login]].map { |it|
+          bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map { |it|
             bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{desc}: #{url}" }
         end
       else
