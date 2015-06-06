@@ -2,11 +2,12 @@ require "gitio"
 require "faraday/http_cache"
 require "octokit"
 
-stack              = Faraday::RackBuilder.new do |builder|
+stack = Faraday::RackBuilder.new do |builder|
   builder.use Faraday::HttpCache
   builder.use Octokit::Response::RaiseError
   builder.adapter Faraday.default_adapter
 end
+
 Octokit.middleware = stack
 
 class GithubLinker
