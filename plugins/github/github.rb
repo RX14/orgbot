@@ -45,7 +45,7 @@ class Github
         url   = Gitio::shorten payload[:comment][:html_url]
         issue = payload[:pull_request][:number]
         user  = payload[:comment][:user][:login]
-        body  = payload[:comment][:body].split("/n")[0][0..400]
+        body  = payload[:comment][:body].split(/\r?\n/)[0][0..400]
         repo  = payload[:repository][:name]
         bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map do |it|
           bot.channel_list.find(it)
@@ -99,7 +99,7 @@ class Github
         url   = Gitio::shorten payload[:issue][:html_url]
         issue = payload[:issue][:number]
         user  = payload[:comment][:user][:login]
-        body  = payload[:comment][:body].split("/n")[0][0..400]
+        body  = payload[:comment][:body].split(/\r?\n/)[0][0..400]
         title = payload[:issue][:title]
         repo  = payload[:repository][:name]
         bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map do |it|
@@ -147,7 +147,7 @@ class Github
         url    = Gitio::shorten payload[:comment][:html_url]
         commit = payload[:comment][:commit_id]
         user   = payload[:comment][:user][:login]
-        body   = payload[:comment][:body].split("/n")[0][0..400]
+        body   = payload[:comment][:body].split(/\r?\n/)[0][0..400]
         repo   = payload[:repository][:name]
         bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map do |it|
           bot.channel_list.find(it)
