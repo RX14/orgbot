@@ -51,7 +51,7 @@ class Github
         repo = payload[:repository][:name]
         url  = Gitio::shorten payload[:compare]
         user = payload[:sender][:login]
-        var = payload[:repository][:owner][:login]
+        var = payload[:repository][:owner][:name]
         puts var.inspect
         bot.bot_config['github_orgs'][var].map { |it|
           puts it
