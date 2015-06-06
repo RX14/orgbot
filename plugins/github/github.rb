@@ -35,7 +35,7 @@ class Github
           user  = payload[:sender][:login]
           bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map do |it|
             bot.channel_list.find(it)
-          end.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} #{action} pull request #{Cinch::Formatting.format(:green, "\##{issue}")}: \"#{title}\" - #{url}" }
+          end.each { |chan| chan.msg "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} #{action} pull request #{Cinch::Formatting.format(:green, "\##{issue}")}: \"#{title}\" - #{url}" }
         end
       when 'pull_request_review_comment'
         url   = Gitio::shorten payload[:comment][:html_url]
@@ -43,7 +43,7 @@ class Github
         user  = payload[:comment][:user][:login]
         repo  = payload[:repository][:name]
         bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map { |it|
-          bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} reviewed pull request #{Cinch::Formatting.format(:green, "\##{issue}")} - #{url}" }
+          bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} reviewed pull request #{Cinch::Formatting.format(:green, "\##{issue}")} - #{url}" }
       when 'push'
         name = payload[:ref]
         name.slice!(/^refs\/heads\//)
@@ -56,12 +56,12 @@ class Github
         bot.bot_config['github_orgs'][var].map { |it|
           puts it
           bot.channel_list.find(it) }.each do |chan|
-          chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} pushed #{Cinch::Formatting.format(:green, num.to_s)} commits to #{Cinch::Formatting.format(:green, name)}: #{url}"
+          chan.msg "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} pushed #{Cinch::Formatting.format(:green, num.to_s)} commits to #{Cinch::Formatting.format(:green, name)}: #{url}"
           payload[:commits].take(3).each do |commit|
-            chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting::format(:green, commit[:id][0..7])} #{commit[:message]}"
+            chan.msg "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting::format(:green, commit[:id][0..7])} #{commit[:message]}"
           end
           unless num - 3 <= 0
-            chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: ...and #{Cinch::Formatting.format(:green, (num - 3).to_s)} more."
+            chan.msg "[#{Cinch::Formatting.format(:pink, repo)}]: ...and #{Cinch::Formatting.format(:green, (num - 3).to_s)} more."
           end
         end
 
@@ -74,7 +74,7 @@ class Github
           url   = Gitio::shorten payload[:issue][:html_url]
           user  = payload[:sender][:login]
          bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map { |it|
-            bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} #{action} issue #{Cinch::Formatting.format(:green, "\##{issue}")}: \"#{title}\" - #{url}" }
+            bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} #{action} issue #{Cinch::Formatting.format(:green, "\##{issue}")}: \"#{title}\" - #{url}" }
         end
 
       when 'issue_comment'
@@ -84,7 +84,7 @@ class Github
         title = payload[:issue][:title]
         repo  = payload[:repository][:name]
         bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map { |it|
-          bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} commented on issue #{Cinch::Formatting.format(:green, "\##{issue}")}: \"#{title}\" - #{url}" }
+          bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} commented on issue #{Cinch::Formatting.format(:green, "\##{issue}")}: \"#{title}\" - #{url}" }
 
       when 'create'
         name = payload[:ref]
@@ -93,7 +93,7 @@ class Github
         url  = Gitio::shorten payload[:repository][:html_url]
         user = payload[:sender][:login]
         bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map { |it|
-          bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} created #{type} #{name}: #{url}" }
+          bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} created #{type} #{name}: #{url}" }
 
       when 'delete'
         name = payload[:ref]
@@ -102,14 +102,14 @@ class Github
         url  = Gitio::shorten payload[:repository][:html_url]
         user = payload[:sender][:login]
         bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map { |it|
-          bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} deleted #{type} #{name}: #{url}" }
+          bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} deleted #{type} #{name}: #{url}" }
 
       when 'fork'
         repo = payload[:repository][:name]
         url  = Gitio::shorten payload[:forkee][:html_url]
         user = payload[:forkee][:owner][:login]
         bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map { |it|
-          bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} forked the repo: #{url}" }
+          bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} forked the repo: #{url}" }
 
       when 'commit_comment'
         url    = Gitio::shorten payload[:comment][:html_url]
@@ -117,7 +117,7 @@ class Github
         user   = payload[:comment][:user][:login]
         repo   = payload[:repository][:name]
         bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map { |it|
-          bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{Cinch::Formatting.format(:orange, user)} commented on commit #{Cinch::Formatting.format(:green, commit)}: #{url}" }
+          bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} commented on commit #{Cinch::Formatting.format(:green, commit)}: #{url}" }
 
       when 'status'
         state = payload[:state]
@@ -126,7 +126,7 @@ class Github
           url  = payload[:target_url]
           desc = payload[:description]
           bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map { |it|
-            bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:blue, repo)}]: #{desc}: #{url}" }
+            bot.channel_list.find(it) }.each { |chan| chan.msg "[#{Cinch::Formatting.format(:pink, repo)}]: #{desc}: #{url}" }
         end
       else
         # No-op
