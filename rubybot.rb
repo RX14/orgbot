@@ -16,7 +16,8 @@ $bot = ElrosBot::Bot.new(
         http_host:    '0.0.0.0',
         http_port:    4567,
         plugins:      [Github,
-                       Cinch::HttpServer]
+                       Cinch::HttpServer,
+                       GithubLinker]
     })
 
 Signal.trap('TERM') do
