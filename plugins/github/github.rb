@@ -22,6 +22,39 @@ class Github
     @request_payload = Yajl::Parser.parse(read, symbolize_keys: true)
   end
 
+  helpers do
+    def send_comment_body(body, target)
+      body = "\"#{body.split(/\r\n|\r|\n/)[0]}\""
+
+      split_start = bot.config.message_split_start || ""
+      split_end   = bot.config.message_split_end || ""
+      command     = "NOTICE"
+
+      maxlength             = 510 - (":" + " #{command} " + " :").size
+      maxlength             = maxlength - bot.mask.to_s.length - target.name.to_s.length
+      maxlength_without_end = maxlength - split_end.bytesize
+
+      if body.bytesize > maxlength
+        splitted = []
+
+        while body.bytesize > maxlength_without_end
+          pos = body.rindex(/\s/, maxlength_without_end)
+          r   = pos || maxlength_without_end
+          splitted << body.slice!(0, r) + split_end.tr(" ", "\u00A0")
+          body = split_start.tr(" ", "\u00A0") + body.lstrip
+        end
+
+        splitted << body
+        splitted[0, (bot.config.max_messages || splitted.size)].each do |string|
+          string.tr!("\u00A0", " ") # clean string from any non-breaking spaces
+          bot.irc.send("#{command} #{target.name} :#{string}")
+        end
+      else
+        bot.irc.send("#{command} #{target.name} :#{body}")
+      end
+    end
+  end
+
   post '/gh-hook', :agent => /GitHub-Hookshot\/.*/ do
     payload = @request_payload
     event   = request.env['HTTP_X_GITHUB_EVENT']
@@ -174,36 +207,5 @@ class Github
         # No-op
     end
     204
-  end
-
-  def send_comment_body(body, target)
-    body = "\"#{body.split(/\r\n|\r|\n/)[0]}\""
-
-    split_start = bot.config.message_split_start || ""
-    split_end   = bot.config.message_split_end || ""
-    command     = "NOTICE"
-
-    maxlength             = 510 - (":" + " #{command} " + " :").size
-    maxlength             = maxlength - bot.mask.to_s.length - target.name.to_s.length
-    maxlength_without_end = maxlength - split_end.bytesize
-
-    if body.bytesize > maxlength
-      splitted = []
-
-      while body.bytesize > maxlength_without_end
-        pos = body.rindex(/\s/, maxlength_without_end)
-        r   = pos || maxlength_without_end
-        splitted << body.slice!(0, r) + split_end.tr(" ", "\u00A0")
-        body = split_start.tr(" ", "\u00A0") + body.lstrip
-      end
-
-      splitted << body
-      splitted[0, (bot.config.max_messages || splitted.size)].each do |string|
-        string.tr!("\u00A0", " ") # clean string from any non-breaking spaces
-        bot.irc.send("#{command} #{target.name} :#{string}")
-      end
-    else
-      bot.irc.send("#{command} #{target.name} :#{body}")
-    end
   end
 end
