@@ -20,9 +20,7 @@ class Github
     read = request.body.read
 
     @request_payload = Yajl::Parser.parse(read, symbolize_keys: true)
-  end
 
-  helpers do
     def send_comment_body(body, target)
       body = "\"#{body.split(/\r\n|\r|\n/)[0]}\""
 
