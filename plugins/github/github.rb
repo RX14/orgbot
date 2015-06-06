@@ -46,15 +46,18 @@ class Github
         issue = payload[:pull_request][:number]
         user  = payload[:comment][:user][:login]
         body  = payload[:comment][:body].split(/\r?\n/)[0]
-        if body.length > 480
-          body = body[0..480] + "..."
-        end
         repo  = payload[:repository][:name]
         bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map do |it|
           bot.channel_list.find(it)
         end.each do |chan|
           chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} reviewed pull request #{Cinch::Formatting.format(:green, "\##{issue}")} - #{url}"
-          chan.notice body
+
+          maxlength = 510 - (":" + " #{command} " + " :" + '""').size
+          maxlength = maxlength - @bot.mask.to_s.length - @name.to_s.length
+          if body.bytesize > maxlength
+            body = body[0..maxlength - 4] + " ..."
+          end
+          chan.notice "\"#{body}\""
         end
 
       when 'push'
@@ -103,16 +106,19 @@ class Github
         issue = payload[:issue][:number]
         user  = payload[:comment][:user][:login]
         body  = payload[:comment][:body].split(/\r?\n/)[0]
-        if body.length > 480
-          body = body[0..480] + "..."
-        end
         title = payload[:issue][:title]
         repo  = payload[:repository][:name]
         bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map do |it|
           bot.channel_list.find(it)
         end.each do |chan|
           chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} commented on issue #{Cinch::Formatting.format(:green, "\##{issue}")}: \"#{title}\" - #{url}"
-          chan.notice body
+
+          maxlength = 510 - (":" + " #{command} " + " :" + '""').size
+          maxlength = maxlength - @bot.mask.to_s.length - @name.to_s.length
+          if body.bytesize > maxlength
+            body = body[0..maxlength - 4] + " ..."
+          end
+          chan.notice "\"#{body}\""
         end
 
       when 'create'
@@ -154,15 +160,18 @@ class Github
         commit = payload[:comment][:commit_id]
         user   = payload[:comment][:user][:login]
         body  = payload[:comment][:body].split(/\r?\n/)[0]
-        if body.length > 480
-          body = body[0..480] + "..."
-        end
         repo   = payload[:repository][:name]
         bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map do |it|
           bot.channel_list.find(it)
         end.each do |chan|
           chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} commented on commit #{Cinch::Formatting.format(:green, commit)}: #{url}"
-          chan.notice body
+
+          maxlength = 510 - (":" + " #{command} " + " :" + '""').size
+          maxlength = maxlength - @bot.mask.to_s.length - @name.to_s.length
+          if body.bytesize > maxlength
+            body = body[0..maxlength - 4] + " ..."
+          end
+          chan.notice "\"#{body}\""
         end
 
       when 'status'
