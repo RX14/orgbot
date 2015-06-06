@@ -52,7 +52,7 @@ class Github
         end.each do |chan|
           chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} reviewed pull request #{Cinch::Formatting.format(:green, "\##{issue}")} - #{url}"
 
-          maxlength = 510 - (":" + " #{command} " + " :" + '""').size
+          maxlength = 510 - (":" + " NOTICE " + " :" + '""').size
           maxlength = maxlength - @bot.mask.to_s.length - @name.to_s.length
           if body.bytesize > maxlength
             body = body[0..maxlength - 4] + " ..."
@@ -113,7 +113,7 @@ class Github
         end.each do |chan|
           chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} commented on issue #{Cinch::Formatting.format(:green, "\##{issue}")}: \"#{title}\" - #{url}"
 
-          maxlength = 510 - (":" + " #{command} " + " :" + '""').size
+          maxlength = 510 - (":" + " NOTICE " + " :" + '""').size
           maxlength = maxlength - @bot.mask.to_s.length - @name.to_s.length
           if body.bytesize > maxlength
             body = body[0..maxlength - 4] + " ..."
@@ -166,7 +166,7 @@ class Github
         end.each do |chan|
           chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} commented on commit #{Cinch::Formatting.format(:green, commit)}: #{url}"
 
-          maxlength = 510 - (":" + " #{command} " + " :" + '""').size
+          maxlength = 510 - (":" + " NOTICE " + " :" + '""').size
           maxlength = maxlength - @bot.mask.to_s.length - @name.to_s.length
           if body.bytesize > maxlength
             body = body[0..maxlength - 4] + " ..."
