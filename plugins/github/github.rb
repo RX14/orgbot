@@ -54,9 +54,8 @@ class Github
 
           body = "\"#{body.split(/\r\n|\r|\n/)[0]}\""
 
-          split_start = bot.config.message_split_start || ""
-          split_end   = bot.config.message_split_end || ""
-          command     = "NOTICE"
+          split_end = " ..."
+          command   = "NOTICE"
 
           maxlength             = 510 - (":" + " #{command} " + " :").size
           maxlength             = maxlength - bot.mask.to_s.length - chan.name.to_s.length
@@ -65,18 +64,14 @@ class Github
           if body.bytesize > maxlength
             splitted = []
 
-            while body.bytesize > maxlength_without_end
+            if body.bytesize > maxlength_without_end
               pos = body.rindex(/\s/, maxlength_without_end)
               r   = pos || maxlength_without_end
               splitted << body.slice!(0, r) + split_end.tr(" ", "\u00A0")
               body = split_start.tr(" ", "\u00A0") + body.lstrip
             end
 
-            splitted << body
-            splitted[0, (bot.config.max_messages || splitted.size)].each do |string|
-              string.tr!("\u00A0", " ") # clean string from any non-breaking spaces
-              bot.irc.send("#{command} #{chan.name} :#{string}")
-            end
+            bot.irc.send("#{command} #{chan.name} :#{splitted[0].tr("\u00A0", " ")}")
           else
             bot.irc.send("#{command} #{chan.name} :#{body}")
           end
@@ -137,9 +132,8 @@ class Github
 
           body = "\"#{body.split(/\r\n|\r|\n/)[0]}\""
 
-          split_start = bot.config.message_split_start || ""
-          split_end   = bot.config.message_split_end || ""
-          command     = "NOTICE"
+          split_end = " ..."
+          command   = "NOTICE"
 
           maxlength             = 510 - (":" + " #{command} " + " :").size
           maxlength             = maxlength - bot.mask.to_s.length - chan.name.to_s.length
@@ -148,18 +142,14 @@ class Github
           if body.bytesize > maxlength
             splitted = []
 
-            while body.bytesize > maxlength_without_end
+            if body.bytesize > maxlength_without_end
               pos = body.rindex(/\s/, maxlength_without_end)
               r   = pos || maxlength_without_end
               splitted << body.slice!(0, r) + split_end.tr(" ", "\u00A0")
               body = split_start.tr(" ", "\u00A0") + body.lstrip
             end
 
-            splitted << body
-            splitted[0, (bot.config.max_messages || splitted.size)].each do |string|
-              string.tr!("\u00A0", " ") # clean string from any non-breaking spaces
-              bot.irc.send("#{command} #{chan.name} :#{string}")
-            end
+            bot.irc.send("#{command} #{chan.name} :#{splitted[0].tr("\u00A0", " ")}")
           else
             bot.irc.send("#{command} #{chan.name} :#{body}")
           end
@@ -212,9 +202,8 @@ class Github
 
           body = "\"#{body.split(/\r\n|\r|\n/)[0]}\""
 
-          split_start = bot.config.message_split_start || ""
-          split_end   = bot.config.message_split_end || ""
-          command     = "NOTICE"
+          split_end = " ..."
+          command   = "NOTICE"
 
           maxlength             = 510 - (":" + " #{command} " + " :").size
           maxlength             = maxlength - bot.mask.to_s.length - chan.name.to_s.length
@@ -223,18 +212,14 @@ class Github
           if body.bytesize > maxlength
             splitted = []
 
-            while body.bytesize > maxlength_without_end
+            if body.bytesize > maxlength_without_end
               pos = body.rindex(/\s/, maxlength_without_end)
               r   = pos || maxlength_without_end
               splitted << body.slice!(0, r) + split_end.tr(" ", "\u00A0")
               body = split_start.tr(" ", "\u00A0") + body.lstrip
             end
 
-            splitted << body
-            splitted[0, (bot.config.max_messages || splitted.size)].each do |string|
-              string.tr!("\u00A0", " ") # clean string from any non-breaking spaces
-              bot.irc.send("#{command} #{chan.name} :#{string}")
-            end
+            bot.irc.send("#{command} #{chan.name} :#{splitted[0].tr("\u00A0", " ")}")
           else
             bot.irc.send("#{command} #{chan.name} :#{body}")
           end
