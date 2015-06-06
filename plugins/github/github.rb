@@ -52,13 +52,13 @@ class Github
         end.each do |chan|
           chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} reviewed pull request #{Cinch::Formatting.format(:green, "\##{issue}")} - #{url}"
 
-          body = "\"#{body.split(/\r\n|\r|\n/)[0]}\""
+          body = body.split(/\r\n|\r|\n/)[0]
 
           split_end = " ..."
           command   = "NOTICE"
 
           maxlength             = 510 - (":" + " #{command} " + " :").size
-          maxlength             = maxlength - bot.mask.to_s.length - chan.name.to_s.length
+          maxlength             = maxlength - bot.mask.to_s.length - chan.name.to_s.length - 2
           maxlength_without_end = maxlength - split_end.bytesize
 
           if body.bytesize > maxlength
@@ -71,9 +71,9 @@ class Github
               body = body.lstrip
             end
 
-            bot.irc.send("#{command} #{chan.name} :#{splitted[0].tr("\u00A0", " ")}")
+            bot.irc.send("#{command} #{chan.name} :\"#{splitted[0].tr("\u00A0", " ")}\"")
           else
-            bot.irc.send("#{command} #{chan.name} :#{body}")
+            bot.irc.send("#{command} #{chan.name} :\"#{body}\"")
           end
         end
 
@@ -130,13 +130,13 @@ class Github
         end.each do |chan|
           chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} commented on issue #{Cinch::Formatting.format(:green, "\##{issue}")}: \"#{title}\" - #{url}"
 
-          body = "\"#{body.split(/\r\n|\r|\n/)[0]}\""
+          body = body.split(/\r\n|\r|\n/)[0]
 
           split_end = " ..."
           command   = "NOTICE"
 
           maxlength             = 510 - (":" + " #{command} " + " :").size
-          maxlength             = maxlength - bot.mask.to_s.length - chan.name.to_s.length
+          maxlength             = maxlength - bot.mask.to_s.length - chan.name.to_s.length - 2
           maxlength_without_end = maxlength - split_end.bytesize
 
           if body.bytesize > maxlength
@@ -149,9 +149,9 @@ class Github
               body = body.lstrip
             end
 
-            bot.irc.send("#{command} #{chan.name} :#{splitted[0].tr("\u00A0", " ")}")
+            bot.irc.send("#{command} #{chan.name} :\"#{splitted[0].tr("\u00A0", " ")}\"")
           else
-            bot.irc.send("#{command} #{chan.name} :#{body}")
+            bot.irc.send("#{command} #{chan.name} :\"#{body}\"")
           end
         end
 
@@ -200,13 +200,13 @@ class Github
         end.each do |chan|
           chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} commented on commit #{Cinch::Formatting.format(:green, commit)}: #{url}"
 
-          body = "\"#{body.split(/\r\n|\r|\n/)[0]}\""
+          body = body.split(/\r\n|\r|\n/)[0]
 
           split_end = " ..."
           command   = "NOTICE"
 
           maxlength             = 510 - (":" + " #{command} " + " :").size
-          maxlength             = maxlength - bot.mask.to_s.length - chan.name.to_s.length
+          maxlength             = maxlength - bot.mask.to_s.length - chan.name.to_s.length - 2
           maxlength_without_end = maxlength - split_end.bytesize
 
           if body.bytesize > maxlength
@@ -219,9 +219,9 @@ class Github
               body = body.lstrip
             end
 
-            bot.irc.send("#{command} #{chan.name} :#{splitted[0].tr("\u00A0", " ")}")
+            bot.irc.send("#{command} #{chan.name} :\"#{splitted[0].tr("\u00A0", " ")}\"")
           else
-            bot.irc.send("#{command} #{chan.name} :#{body}")
+            bot.irc.send("#{command} #{chan.name} :\"#{body}\"")
           end
         end
 
