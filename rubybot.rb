@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require 'bundler/setup'
 require 'cinch'
 require_relative 'src/elrosbot'
@@ -14,12 +15,7 @@ $bot = ElrosBot::Bot.new(
         cfg_filename: 'config.json',
         http_host:    '0.0.0.0',
         http_port:    4567,
-        plugins:      [Factoids,
-                       Sed,
-                       Tweet,
-                       Github,
-                       PingLists,
-                       Youtube,
+        plugins:      [Github,
                        Cinch::HttpServer]
     })
 
