@@ -45,19 +45,14 @@ class Github
         url   = Gitio::shorten payload[:comment][:html_url]
         issue = payload[:pull_request][:number]
         user  = payload[:comment][:user][:login]
-        body  = payload[:comment][:body].split(/\r?\n/)[0]
+        body  = payload[:comment][:body]
         repo  = payload[:repository][:name]
         bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map do |it|
           bot.channel_list.find(it)
         end.each do |chan|
           chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} reviewed pull request #{Cinch::Formatting.format(:green, "\##{issue}")} - #{url}"
 
-          maxlength = 510 - (":" + " NOTICE " + " :" + '""').size
-          maxlength = maxlength - bot.mask.to_s.length - chan.name.to_s.length
-          if body.bytesize > maxlength
-            body = body[0..maxlength - 4] + " ..."
-          end
-          chan.notice "\"#{body}\""
+          send_comment_body(body, chan)
         end
 
       when 'push'
@@ -105,7 +100,7 @@ class Github
         url   = Gitio::shorten payload[:issue][:html_url]
         issue = payload[:issue][:number]
         user  = payload[:comment][:user][:login]
-        body  = payload[:comment][:body].split(/\r?\n/)[0]
+        body  = payload[:comment][:body]
         title = payload[:issue][:title]
         repo  = payload[:repository][:name]
         bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map do |it|
@@ -113,12 +108,7 @@ class Github
         end.each do |chan|
           chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} commented on issue #{Cinch::Formatting.format(:green, "\##{issue}")}: \"#{title}\" - #{url}"
 
-          maxlength = 510 - (":" + " NOTICE " + " :" + '""').size
-          maxlength = maxlength - bot.mask.to_s.length - chan.name.to_s.length
-          if body.bytesize > maxlength
-            body = body[0..maxlength - 4] + " ..."
-          end
-          chan.notice "\"#{body}\""
+          send_comment_body(body, chan)
         end
 
       when 'create'
@@ -159,19 +149,13 @@ class Github
         url    = Gitio::shorten payload[:comment][:html_url]
         commit = payload[:comment][:commit_id]
         user   = payload[:comment][:user][:login]
-        body  = payload[:comment][:body].split(/\r?\n/)[0]
+        body   = payload[:comment][:body]
         repo   = payload[:repository][:name]
         bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map do |it|
           bot.channel_list.find(it)
         end.each do |chan|
           chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} commented on commit #{Cinch::Formatting.format(:green, commit)}: #{url}"
-
-          maxlength = 510 - (":" + " NOTICE " + " :" + '""').size
-          maxlength = maxlength - bot.mask.to_s.length - chan.name.to_s.length
-          if body.bytesize > maxlength
-            body = body[0..maxlength - 4] + " ..."
-          end
-          chan.notice "\"#{body}\""
+          send_comment_body(body, chan)
         end
 
       when 'status'
@@ -190,5 +174,36 @@ class Github
         # No-op
     end
     204
+  end
+
+  def send_comment_body(body, target)
+    body = "\"#{body.split(/\r\n|\r|\n/)[0]}\""
+
+    split_start = bot.config.message_split_start || ""
+    split_end   = bot.config.message_split_end || ""
+    command     = "NOTICE"
+
+    maxlength             = 510 - (":" + " #{command} " + " :").size
+    maxlength             = maxlength - bot.mask.to_s.length - target.name.to_s.length
+    maxlength_without_end = maxlength - split_end.bytesize
+
+    if body.bytesize > maxlength
+      splitted = []
+
+      while body.bytesize > maxlength_without_end
+        pos = body.rindex(/\s/, maxlength_without_end)
+        r   = pos || maxlength_without_end
+        splitted << body.slice!(0, r) + split_end.tr(" ", "\u00A0")
+        body = split_start.tr(" ", "\u00A0") + body.lstrip
+      end
+
+      splitted << body
+      splitted[0, (bot.config.max_messages || splitted.size)].each do |string|
+        string.tr!("\u00A0", " ") # clean string from any non-breaking spaces
+        bot.irc.send("#{command} #{target.name} :#{string}")
+      end
+    else
+      bot.irc.send("#{command} #{target.name} :#{body}")
+    end
   end
 end
