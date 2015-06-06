@@ -68,7 +68,7 @@ class Github
               pos = body.rindex(/\s/, maxlength_without_end)
               r   = pos || maxlength_without_end
               splitted << body.slice!(0, r) + split_end.tr(" ", "\u00A0")
-              body = split_start.tr(" ", "\u00A0") + body.lstrip
+              body = body.lstrip
             end
 
             bot.irc.send("#{command} #{chan.name} :#{splitted[0].tr("\u00A0", " ")}")
@@ -146,7 +146,7 @@ class Github
               pos = body.rindex(/\s/, maxlength_without_end)
               r   = pos || maxlength_without_end
               splitted << body.slice!(0, r) + split_end.tr(" ", "\u00A0")
-              body = split_start.tr(" ", "\u00A0") + body.lstrip
+              body = body.lstrip
             end
 
             bot.irc.send("#{command} #{chan.name} :#{splitted[0].tr("\u00A0", " ")}")
@@ -216,7 +216,7 @@ class Github
               pos = body.rindex(/\s/, maxlength_without_end)
               r   = pos || maxlength_without_end
               splitted << body.slice!(0, r) + split_end.tr(" ", "\u00A0")
-              body = split_start.tr(" ", "\u00A0") + body.lstrip
+              body = body.lstrip
             end
 
             bot.irc.send("#{command} #{chan.name} :#{splitted[0].tr("\u00A0", " ")}")
