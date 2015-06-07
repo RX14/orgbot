@@ -254,7 +254,9 @@ class Github
           url  = payload[:target_url]
           desc = payload[:description]
 
-          old_state = @statuses[payload[:repository][:full_name]]
+          bot.loggers.info @statuses.inspect
+
+          old_state = @statuses[payload[:repository][:full_name]] || state
 
           if old_state != state
             state_transition = "#{old_state} -> #{state}"
