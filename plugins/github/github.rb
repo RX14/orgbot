@@ -249,11 +249,11 @@ class Github
           desc = payload[:description]
 
 
-          bot.loggers.info @statuses.inspect
+          bot.loggers.info $statuses.inspect
 
-          @statuses = {} if @statuses.nil?
+          $statuses = {} if $statuses.nil?
 
-          old_state = @statuses[payload[:repository][:full_name]] || state
+          old_state = $statuses[payload[:repository][:full_name]] || state
 
           if old_state != state
             state_transition = "#{old_state} -> #{state}"
@@ -274,11 +274,11 @@ class Github
             chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{desc} - #{url}#{state_transition}"
 
             if state == "broken"
-              chan.notice "GOD DAMMNIT #{payload[:commit][:author][:login].upcase}! YOU BROKE THE BUILD!"
+              chan.notice "GOD DAMNIT #{payload[:commit][:author][:login].upcase}! YOU BROKE THE BUILD!"
             end
           end
 
-          @statuses[payload[:repository][:full_name]] = state
+          $statuses[payload[:repository][:full_name]] = state
         end
       else
         # No-op
