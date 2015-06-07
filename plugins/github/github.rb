@@ -113,13 +113,24 @@ class Github
           user  = payload[:sender][:login]
 
           unless payload[:assignee].nil?
-            action += " to #{payload[:assignee][:login]}"
+            a2 = case action
+                   when "assigned"
+                     "to"
+                   when "unassigned"
+                     "from"
+                 end
+
+            if payload[:assignee][:login] == user
+              extra = " #{a2} themselves"
+            else
+              extra = " #{a2} #{payload[:assignee][:login]}"
+            end
           end
 
           bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map do |it|
             bot.channel_list.find(it)
           end.each do |chan|
-            chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} #{action} issue #{Cinch::Formatting.format(:green, "\##{issue}")}: \"#{title}\" - #{url}"
+            chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} #{action} issue #{Cinch::Formatting.format(:green, "\##{issue}")}#{extra}: \"#{title}\" - #{url}"
           end
         end
 
