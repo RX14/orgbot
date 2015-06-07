@@ -111,6 +111,11 @@ class Github
           title = payload[:issue][:title]
           url   = Gitio::shorten payload[:issue][:html_url]
           user  = payload[:sender][:login]
+
+          unless payload[:assignee].nil?
+            action += " to #{payload[:assignee][:login]}"
+          end
+
           bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map do |it|
             bot.channel_list.find(it)
           end.each do |chan|
