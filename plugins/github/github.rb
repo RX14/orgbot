@@ -12,6 +12,12 @@ class Github
 
   listen_to :connect, method: :connected
 
+  def initialize(*args)
+    super
+
+    @statuses = {}
+  end
+
   def connected(_)
   end
 
@@ -247,15 +253,33 @@ class Github
           repo = payload[:repository][:name]
           url  = payload[:target_url]
           desc = payload[:description]
+
+          old_state = @statuses[payload[:repository][:full_name]]
+
+          if old_state != state
+            state_transition = "#{old_state} -> #{state}"
+            case state_transition
+              when "success -> failure"
+              when "success -> error"
+                state = "broken"
+              when "failure -> success"
+              when "error -> success"
+                state = "fixed"
+            end
+            state_transition = " (#{state_transition})"
+          end
+
           bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map do |it|
             bot.channel_list.find(it)
           end.each do |chan|
-            chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{desc} - #{url}"
+            chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{desc} - #{url}#{state_transition}"
 
-            if state == 'failure' or state == 'error'
-              chan.notice "GOD DAMMNIT #{payload[:commit][:author][:login].upcase}! THE BUILD IS BROKEN!"
+            if state == "broken"
+              chan.notice "GOD DAMMNIT #{payload[:commit][:author][:login].upcase}! YOU BROKE THE BUILD!"
             end
           end
+
+          @statuses[payload[:repository][:full_name]] = state
         end
       else
         # No-op
