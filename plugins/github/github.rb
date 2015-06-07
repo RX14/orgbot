@@ -12,13 +12,8 @@ class Github
 
   listen_to :connect, method: :connected
 
-  def initialize(*args)
-    super
-
-    @statuses = {}
-  end
-
   def connected(_)
+    @statuses = {}
   end
 
   before do
