@@ -16,7 +16,7 @@ class GithubLinker
   def initialize(*args)
     super
 
-    @last = []
+    @last = {}
   end
 
   Yajl::Parser.parse(File.read("config.json"))["github_linker"].each do |channel, aliases|
