@@ -239,7 +239,11 @@ class Github
           bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map do |it|
             bot.channel_list.find(it)
           end.each do |chan|
-            chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{desc}: #{url}"
+            chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{desc} - #{url}"
+
+            if state == 'failure' or state == 'error'
+              chan.notice "GOD DAMMNIT #{payload[:commit][:author][:login].upcase}! THE BUILD IS BROKEN!"
+            end
           end
         end
       else
