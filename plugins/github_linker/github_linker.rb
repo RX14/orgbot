@@ -1,6 +1,7 @@
 require "gitio"
 require "faraday/http_cache"
 require "octokit"
+require "active_support"
 
 stack = Faraday::RackBuilder.new do |builder|
   builder.use Faraday::HttpCache
@@ -16,7 +17,7 @@ class GithubLinker
   def initialize(*args)
     super
 
-    @last = {}
+    @last = Hash.new{ |h,k| h[k] = Hash.new(&h.default_proc) }
   end
 
   Yajl::Parser.parse(File.read("config.json"))["github_linker"].each do |channel, aliases|
@@ -29,14 +30,16 @@ class GithubLinker
 
         define_method("#{channel}/#{a}") do |m, issue_num|
           if m.target == channel
-            if @last[channel] != "#{repo}##{issue_num}"
+            puts JSON.pretty_generate(@last)
+            @last[channel]["#{repo}##{issue_num}"] = Time.now.advance(days: -1) if @last[channel]["#{repo}##{issue_num}"].is_a? Hash
+            if @last[channel]["#{repo}##{issue_num}"] < Time.now.advance(minutes: -5)
               begin
                 issue = Octokit.issue repo, issue_num
                 m.reply "[#{Format(:pink, repo)} #{Format(:green, "##{issue.number}")}] - #{Gitio.shorten(issue.html_url)} #{issue.user.login}: \"#{issue.title}\""
               rescue Octokit::NotFound
               end
             end
-            @last[channel] = "#{repo}##{issue_num}"
+            @last[channel]["#{repo}##{issue_num}"] = Time.now
           end
         end
       end
