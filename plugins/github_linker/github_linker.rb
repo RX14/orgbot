@@ -13,6 +13,12 @@ Octokit.middleware = stack
 class GithubLinker
   include Cinch::Plugin
 
+  def initialize(*args)
+    super
+
+    @last = []
+  end
+
   Yajl::Parser.parse(File.read("config.json"))["github_linker"].each do |channel, aliases|
     aliases.each do |repo, a2|
       a2 << repo
@@ -21,13 +27,16 @@ class GithubLinker
         GithubLinker.match /(?:\s|^)#{a}#([0-9]{1,4})(?:\s|$)/i, method: (channel + "/" + a).to_sym, use_prefix: false, use_suffix: false
         GithubLinker.match /(?:\s|^)#{a.nil? ? "" : "#{a} "}issue ([0-9]{1,4})(?:\s|$)/i, method: (channel + "/" + a).to_sym, use_prefix: false, use_suffix: false
 
-        GithubLinker.send :define_method, channel + "/" + a do |m, issue|
+        GithubLinker.send :define_method, channel + "/" + a do |m, issue_num|
           if m.target == channel
-            begin
-              issue = Octokit.issue repo, issue
-              m.reply "[#{Format(:pink, repo)} #{Format(:green, "##{issue.number}")}] - #{Gitio.shorten(issue.html_url)} #{issue.user.login}: \"#{issue.title}\""
-            rescue Octokit::NotFound
+            if @last[channel] != "#{repo}##{issue_num}"
+              begin
+                issue = Octokit.issue repo, issue_num
+                m.reply "[#{Format(:pink, repo)} #{Format(:green, "##{issue.number}")}] - #{Gitio.shorten(issue.html_url)} #{issue.user.login}: \"#{issue.title}\""
+              rescue Octokit::NotFound
+              end
             end
+            @last[channel] = "#{repo}##{issue_num}"
           end
         end
       end
