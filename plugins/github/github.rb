@@ -278,7 +278,7 @@ class Github
             end
           end
 
-          $statuses[payload[:repository][:full_name]] = state
+          $statuses[payload[:repository][:full_name]] = payload[:state]
         end
       else
         # No-op
