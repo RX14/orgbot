@@ -13,7 +13,6 @@ class Github
   listen_to :connect, method: :connected
 
   def connected(_)
-    @statuses = {}
   end
 
   before do
@@ -249,7 +248,10 @@ class Github
           url  = payload[:target_url]
           desc = payload[:description]
 
+
           bot.loggers.info @statuses.inspect
+
+          @statuses = {} if @statuses.nil?
 
           old_state = @statuses[payload[:repository][:full_name]] || state
 
