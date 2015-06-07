@@ -25,7 +25,7 @@ class GithubLinker
       a2 << repo.split("/")[1]
       a2.each do |a|
         GithubLinker.match /(?:\s|^)#{a}#([0-9]{1,4})(?:\s|$)/i, method: (channel + "/" + a).to_sym, use_prefix: false, use_suffix: false
-        GithubLinker.match /(?:\s|^)#{a.nil? ? "" : "#{a} "}issue ([0-9]{1,4})(?:\s|$)/i, method: (channel + "/" + a).to_sym, use_prefix: false, use_suffix: false
+        GithubLinker.match /(?:\s|^)#{a == "" ? "" : "#{a} "}issue ([0-9]{1,4})(?:\s|$)/i, method: (channel + "/" + a).to_sym, use_prefix: false, use_suffix: false
 
         GithubLinker.send :define_method, channel + "/" + a do |m, issue_num|
           if m.target == channel
