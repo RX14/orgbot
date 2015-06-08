@@ -95,7 +95,7 @@ class Github
           end.each do |chan|
             chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting.format(:orange, user)} pushed #{Cinch::Formatting.format(:green, num.to_s)} commits to #{Cinch::Formatting.format(:green, branch)}: #{url}"
             payload[:commits].take(3).each do |commit|
-              chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting::format(:green, commit[:id][0..7])} #{commit[:message]}"
+              chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: #{Cinch::Formatting::format(:green, commit[:id][0..7])} #{commit[:message].split(/\r\n|\r|\n/)[0]}"
             end
             unless num <= 3
               chan.notice "[#{Cinch::Formatting.format(:pink, repo)}]: ...and #{Cinch::Formatting.format(:green, (num - 3).to_s)} more."
