@@ -258,11 +258,9 @@ class Github
           if old_state != state
             state_transition = "#{old_state} -> #{state}"
             case state_transition
-              when "success -> failure"
-              when "success -> error"
+              when "success -> failure", "success -> error"
                 state = "broken"
-              when "failure -> success"
-              when "error -> success"
+              when "failure -> success", "error -> success"
                 state = "fixed"
             end
             state_transition = " (#{state_transition})"
