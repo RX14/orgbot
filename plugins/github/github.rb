@@ -248,12 +248,9 @@ class Github
           url  = payload[:target_url]
           desc = payload[:description]
 
+          $statuses = Hash.new { |h, k| h[k] = {} } if $statuses.nil?
 
-          bot.loggers.info $statuses.inspect
-
-          $statuses = {} if $statuses.nil?
-
-          old_state = $statuses[payload[:repository][:full_name]] || state
+          old_state = $statuses[payload[:repository][:full_name]][payload[:branches][0][:name]] || state
 
           if old_state != state
             state_transition = "#{old_state} -> #{state}"
@@ -276,7 +273,9 @@ class Github
             end
           end
 
-          $statuses[payload[:repository][:full_name]] = payload[:state]
+          payload[:branches].each do |branch|
+            $statuses[payload[:repository][:full_name]][branch[:name]] = payload[:state]
+          end
         end
       else
         # No-op
