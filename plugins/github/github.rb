@@ -260,7 +260,7 @@ class Github
               when "failure -> success", "error -> success"
                 state = "fixed"
             end
-            state_transition = " (#{state_transition})"
+            state_transition = " (#{state_transition} branch #{payload[:branches][0][:name]})"
           end
 
           bot.bot_config['github_orgs'][payload[:repository][:owner][:login]].map do |it|
