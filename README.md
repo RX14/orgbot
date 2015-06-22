@@ -23,6 +23,7 @@ From within the project directory, run
 ## Example config file
 ```json
 {
+  "owner": "######",
   "bot": {
     "server": "irc.esper.net",
     "channels": [
@@ -34,15 +35,17 @@ From within the project directory, run
     "sasl.password": "######",
     "user": "ElrosGem"
   },
-  "twitter": {
-    "consumer_key": "#######",
-    "consumer_secret": "########",
-    "access_key": "####-#######",
-    "access_secret": "########"
+  "github_orgs": {
+    "organisation_name": ["#example"]
   },
-  "github_repos": {
-    "user/repo": ["#example"]
+  "github_linker": {
+    "ORG/REPO": [ //Automatic alias for ORG/REPO and REPO
+      "alias" //alias#1
+      "" //For just #1
+    ],
+    "ORG/REPO2": [
+      "repo2" //alias#1
+    ]
   }
-}
 }
 ```
