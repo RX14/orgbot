@@ -39,13 +39,15 @@ From within the project directory, run
     "organisation_name": ["#example"]
   },
   "github_linker": {
-    "ORG/REPO": [ //Automatic alias for ORG/REPO and REPO
-      "alias" //alias#1
-      "" //For just #1
-    ],
-    "ORG/REPO2": [
-      "repo2" //alias#1
-    ]
+    "#Channel": {
+      "ORG/REPO": [ //Automatic alias for ORG/REPO and REPO
+        "alias" //alias#1
+        "" //For just #1
+      ],
+      "ORG/REPO2": [
+        "repo2" //alias#1
+      ]
+    }
   }
 }
 ```
