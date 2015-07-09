@@ -35,7 +35,7 @@ class GithubLinker
             if @last[channel]["#{repo}##{issue_num}"] < Time.now.advance(minutes: -5)
               begin
                 issue = Octokit.issue repo, issue_num
-                m.reply "[#{Format(:pink, repo)} #{Format(:green, "##{issue.number}")}] - #{Gitio.shorten(issue.html_url)} #{issue.user.login}: \"#{issue.title}\""
+                m.channel.notice "[#{Format(:pink, repo)} #{Format(:green, "##{issue.number}")}] - #{Gitio.shorten(issue.html_url)} #{issue.user.login}: \"#{issue.title}\""
               rescue Octokit::NotFound
               end
             end
